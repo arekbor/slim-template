@@ -1,0 +1,7 @@
+{% macro field_error(errors = []) %}
+    {% if errors is not empty %}
+        {% for error in errors %}
+            <span>{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}

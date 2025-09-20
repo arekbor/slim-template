@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    You're logged as <strong>{{ user.username }}</strong>
+    <hr/>
+    <a href="{{ link('logout') }}">Logout</a>
+{% endblock %}

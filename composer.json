@@ -1,0 +1,26 @@
+{
+  "name": "arekbor/template-slim",
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "arekbor",
+      "email": "arekindependent@gmail.com"
+    }
+  ],
+  "require": {
+    "slim/psr7": "1.7.1",
+    "slim/slim": "4.15.0",
+    "twig/twig": "3.21.1",
+    "symfony/dotenv": "7.3.2",
+    "php-di/php-di": "7.1.1"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^7.3"
+  }
+}

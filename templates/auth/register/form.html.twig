@@ -1,0 +1,29 @@
+{% import "components/form.html.twig" as form %}
+
+<form hx-post="{{ link('auth.register') }}">
+    <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" value="{{ data.values['username']|default('') }}" />
+        {{ form.field_error(data.errors['username']) }}
+    </div>
+
+    <div>
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" value="{{ data.values['email']|default('') }}" />
+        {{ form.field_error(data.errors['email']) }}
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" value="{{ data.values['password']|default('') }}" />
+        {{ form.field_error(data.errors['password']) }}
+    </div>
+
+    <div>
+        <label for="repeat-password">Repeat password</label>
+        <input type="password" name="repeat_password" id="repeat-password" value="{{ data.values['repeat_password']|default('') }}" />
+        {{ form.field_error(data.errors['repeat_password']) }}
+    </div>
+
+    <button type="submit">Register</button>
+</form>

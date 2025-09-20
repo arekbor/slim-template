@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h5>Login form</h5>
+        {% include 'auth/login/form.html.twig' %}
+        <a href="{{ link('auth.register') }}">Register</a>
+    </div>
+    
+{% endblock %}
