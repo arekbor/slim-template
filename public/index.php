@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Repository\Migrations;
 use Symfony\Component\Dotenv\Dotenv;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
@@ -36,6 +37,10 @@ $container->set(RouteParserInterface::class, fn() => $app->getRouteCollector()->
 
 $serverRequestCreator = ServerRequestCreatorFactory::create();
 $request = $serverRequestCreator->createServerRequestFromGlobals();
+
+//TODO: make some command or something
+$migrations = new Migrations();
+$migrations->createTables();
 
 $response = $app->handle($request);
 $responseEmitter = new ResponseEmitter();

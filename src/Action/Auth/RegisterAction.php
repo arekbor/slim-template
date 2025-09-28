@@ -9,7 +9,7 @@ use App\Repository\UserRepository;
 use App\Validator\Assert\EmailAssert;
 use App\Validator\Assert\NotEmptyAssert;
 use App\Validator\Assert\PasswordMatchAssert;
-use App\Validator\Validator;
+use App\Validator\FormValidator;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 final class RegisterAction extends AbstractAction
 {
     public function __construct(
-        private readonly Validator $validator,
+        private readonly FormValidator $formValidator,
         private readonly UserRepository $userRepository
     ) {}
 
@@ -29,20 +29,20 @@ final class RegisterAction extends AbstractAction
 
         $body = $this->request->getParsedBody();
 
-        $this->validator
-            ->assertField('username', [new NotEmptyAssert()])
-            ->assertField('email', [new NotEmptyAssert(), new EmailAssert()])
-            ->assertField('password', [new NotEmptyAssert()])
-            ->assertField('repeat_password', [new NotEmptyAssert(), new PasswordMatchAssert($body['password'])])
+        $this->formValidator
+            ->addField('username', [new NotEmptyAssert()])
+            ->addField('email', [new NotEmptyAssert(), new EmailAssert()])
+            ->addField('password', [new NotEmptyAssert()])
+            ->addField('repeat_password', [new NotEmptyAssert(), new PasswordMatchAssert($body['password'])])
         ;
 
-        if (!$this->validator->valid($body)) {
-            return $this->getForm();
+        if (!$this->formValidator->valid($body)) {
+            return $this->getInvalidForm();
         }
 
         if ($this->userRepository->getUserByEmail($body['email'])) {
-            $this->validator->addError('email', 'This email is already used.');
-            return $this->getForm();
+            //TODO: add flash message "This email is already used."
+            return $this->getInvalidForm();
         }
 
         $hashedPassword = password_hash($body['password'], PASSWORD_BCRYPT);
@@ -60,10 +60,10 @@ final class RegisterAction extends AbstractAction
         return $this->hxRedirect("auth.login");
     }
 
-    private function getForm(): ResponseInterface
+    private function getInvalidForm(): ResponseInterface
     {
         return $this->render("auth/register/form.html.twig", [
-            "data" => $this->validator->getData()
+            "fields" => $this->formValidator->getFields()
         ], StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY);
     }
 }

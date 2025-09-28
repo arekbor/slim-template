@@ -6,10 +6,9 @@ namespace App\Action\Auth;
 
 use App\Action\AbstractAction;
 use App\Repository\UserRepository;
-use App\Session;
 use App\Validator\Assert\EmailAssert;
 use App\Validator\Assert\NotEmptyAssert;
-use App\Validator\Validator;
+use App\Validator\FormValidator;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 final class LoginAction extends AbstractAction
 {
     public function __construct(
-        private readonly Validator $validator,
+        private readonly FormValidator $formValidator,
         private readonly UserRepository $userRepository
     ) {}
 
@@ -27,35 +26,36 @@ final class LoginAction extends AbstractAction
             return $this->render("auth/login/index.html.twig");
         }
 
-        $this->validator
-            ->assertField('email', [new NotEmptyAssert(), new EmailAssert()])
-            ->assertField('password', [new NotEmptyAssert()])
-        ;
+        $this->formValidator
+            ->addField('email', [new NotEmptyAssert(), new EmailAssert()])
+            ->addField('password', [new NotEmptyAssert()]);
 
         $body = $this->request->getParsedBody();
 
-        if (!$this->validator->valid($body)) {
-            return $this->getForm();
+        if (!$this->formValidator->valid($body)) {
+            return $this->getInvalidForm();
         }
 
         $user = $this->userRepository->getUserByEmail($body['email']);
         if (!$user || !password_verify($body['password'], $user['password'])) {
-            $this->validator->addError('password', "Invalid email or password.");
-            return $this->getForm();
+            //TODO: add flash message "Invalid email or password."
+            return $this->getInvalidForm();
         }
 
-        Session::set('user_id', $user['id']);
-        Session::set('username', $user['username']);
-        Session::set('email', $user['email']);
-        Session::set('logged_in_at', time());
+        $_SESSION['user'] = [
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'email' => $user['email'],
+            'logged_at' => time()
+        ];
 
         return $this->hxRedirect("home");
     }
 
-    private function getForm(): ResponseInterface
+    private function getInvalidForm(): ResponseInterface
     {
         return $this->render("auth/login/form.html.twig", [
-            "data" => $this->validator->getData()
+            "fields" => $this->formValidator->getFields()
         ], StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY);
     }
 }

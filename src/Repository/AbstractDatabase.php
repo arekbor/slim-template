@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Env;
-
 abstract class AbstractDatabase
 {
     private ?\PDO $pdo = null;
@@ -17,7 +15,6 @@ abstract class AbstractDatabase
     public function __construct()
     {
         $this->initConnection();
-        $this->createTables();
     }
 
     protected function sql(string $sql, array $params = []): static
@@ -56,42 +53,29 @@ abstract class AbstractDatabase
 
     protected function fetchAll(): array
     {
-        return $this->pDOStatement->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->pDOStatement->fetchAll();
     }
 
     protected function fetchOne(): mixed
     {
-        return $this->pDOStatement->fetch(\PDO::FETCH_ASSOC);
+        return $this->pDOStatement->fetch();
     }
 
     private function initConnection(): void
     {
         try {
-            $this->pdo = new \PDO(Env::getDsn(), Env::get('DB_USER'), Env::get('DB_PASSWORD'));
+            $dsn = sprintf("%s:host=%s;port=%s;dbname=%s", $_ENV['DB_DRIVER'], $_ENV['DB_HOST'], $_ENV['DB_PORT'], $_ENV['DB_NAME']);
+            $this->pdo = new \PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
+
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+            $this->pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         } catch (\PDOException $ex) {
-            if (Env::isDev()) {
+            if ($_ENV['APP_ENV'] === 'dev') {
                 die($ex->getMessage());
             }
 
             die();
         }
-    }
-
-    //TODO: init tables in public.php
-    private function createTables(): void
-    {
-        $sql = "
-            CREATE TABLE IF NOT EXISTS users (
-                id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-                username VARCHAR(50) NULL,
-                email VARCHAR(100) NULL,
-                password VARCHAR(255) NULL,
-
-                UNIQUE KEY (email)
-            )
-        ";
-
-        $this->sql($sql);
     }
 }

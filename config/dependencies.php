@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Env;
 use DI\ContainerBuilder;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -14,7 +13,7 @@ return function (ContainerBuilder $containerBuilder): void {
 
             return new Environment($loader, [
                 'cache' => false,
-                'debug' => Env::isDev()
+                'debug' => $_ENV['APP_ENV'] === 'dev'
             ]);
         }
     ]);

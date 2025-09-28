@@ -1,21 +1,48 @@
-{% import "components/form.html.twig" as form %}
-
 <form 
     hx-post="{{ link('auth.login') }}"
+    hx-disabled-elt="button[type='submit']"
 >
-    <div>
-        <label for="email">Email</label>
-        <input type="text" id="email" name="email" value="{{ data.values['email']|default('') }}" />
-        {{ form.field_error(data.errors['email']) }}
-    </div>
+    <label for="email">E-mail</label>
+    <input 
+        type="email"
+        id="email"
+        name="email"
+        {% if fields.email.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-email"
+        {% endif %}
+        value="{{ fields.email.value|default('') }}"
+    />
 
-    <div>
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" value="{{ data.values['password']|default('') }}" />
-        {{ form.field_error(data.errors['password']) }}
-    </div>
+    {% if fields.email.error %}
+        <small id="invalid-helper-email">
+            {{ fields.email.error }}
+        </small>
+    {% endif %}
 
-    <div>
-        <button type="submit">Submit</button>
-    </div>
+    <label for="password">Password</label>
+    <input 
+        type="password"
+        id="password"
+        name="password"
+        {% if fields.password.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-password"
+        {% endif %}
+        value="{{ fields.password.value|default('') }}"
+    />
+
+    {% if fields.password.error %}
+        <small id="invalid-helper-password">
+            {{ fields.password.error }}
+        </small>
+    {% endif %}
+
+    <button type="submit">
+        Login
+    </button>
+
+    <section class="htmx-indicator">
+        <div aria-busy="true"></div>
+    </section>
 </form>

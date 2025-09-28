@@ -32,6 +32,6 @@ final class Twig
 
     private function initTwigGlobals(): void
     {
-        $this->environment->addGlobal('user', Session::getCurrentUser());
+        $this->environment->addGlobal('session', $_SESSION);
     }
 }

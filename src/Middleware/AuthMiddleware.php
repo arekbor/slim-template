@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
-use App\Session;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -22,7 +21,7 @@ final class AuthMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (Session::getCurrentUser()) {
+        if (isset($_SESSION['user'])) {
             return new Response(StatusCodeInterface::STATUS_FOUND, new Headers([
                 'Location' => $this->routeParser->urlFor("home")
             ]));

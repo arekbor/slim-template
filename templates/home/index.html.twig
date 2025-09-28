@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    You're logged as <strong>{{ user.username }}</strong>
-    <hr/>
-    <a href="{{ link('logout') }}">Logout</a>
+    <section>
+        You're logged as <strong>{{ session.user.username }}</strong>
+    </section>
 {% endblock %}

@@ -55,27 +55,28 @@ abstract class AbstractAction
         $html = $this->twig->render($name, $context);
 
         $response = new Response();
-        $response
-            ->withStatus($status)
-            ->getBody()
-            ->write($html)
-        ;
+        $response = $response->withStatus($status);
+        $response->getBody()->write($html);
 
         return $response;
     }
 
     protected function redirect(string $routeName): ResponseInterface
     {
-        return new Response(StatusCodeInterface::STATUS_FOUND, new Headers([
-            'Location' => $this->routeParser->urlFor($routeName)
-        ]));
+        $response = new Response();
+        $response = $response->withStatus(StatusCodeInterface::STATUS_FOUND);
+        $response = $response->withHeader('Location', $this->routeParser->urlFor($routeName));
+
+        return $response;
     }
 
     protected function hxRedirect($routeName): ResponseInterface
     {
-        return new Response(StatusCodeInterface::STATUS_FOUND, new Headers([
-            'HX-Location' => $this->routeParser->urlFor($routeName)
-        ]));
+        $response = new Response();
+        $response = $response->withStatus(StatusCodeInterface::STATUS_FOUND);
+        $response = $response->withHeader('HX-Location', $this->routeParser->urlFor($routeName));
+
+        return $response;
     }
 
     abstract public function handleAction(): ResponseInterface;

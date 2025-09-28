@@ -1,29 +1,84 @@
-{% import "components/form.html.twig" as form %}
+<form 
+    hx-post="{{ link('auth.register') }}"
+    hx-disabled-elt="button[type='submit']"
+>
+    <label for="username">Username</label>
+    <input 
+        type="text"
+        id="username"
+        name="username"
+        {% if fields.username.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-username"
+        {% endif %}
+        value="{{ fields.username.value|default('') }}"
+    />
 
-<form hx-post="{{ link('auth.register') }}">
-    <div>
-        <label for="username">Username</label>
-        <input type="text" name="username" id="username" value="{{ data.values['username']|default('') }}" />
-        {{ form.field_error(data.errors['username']) }}
-    </div>
+    {% if fields.username.error %}
+        <small id="invalid-helper-username">
+            {{ fields.username.error }}
+        </small>
+    {% endif %}
 
-    <div>
-        <label for="email">Email</label>
-        <input type="text" name="email" id="email" value="{{ data.values['email']|default('') }}" />
-        {{ form.field_error(data.errors['email']) }}
-    </div>
+    <label for="email">E-mail</label>
+    <input 
+        type="email"
+        id="email"
+        name="email"
+        {% if fields.email.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-email"
+        {% endif %}
+        value="{{ fields.email.value|default('') }}"
+    />
 
-    <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" value="{{ data.values['password']|default('') }}" />
-        {{ form.field_error(data.errors['password']) }}
-    </div>
+    {% if fields.email.error %}
+        <small id="invalid-helper-email">
+            {{ fields.email.error }}
+        </small>
+    {% endif %}
 
-    <div>
-        <label for="repeat-password">Repeat password</label>
-        <input type="password" name="repeat_password" id="repeat-password" value="{{ data.values['repeat_password']|default('') }}" />
-        {{ form.field_error(data.errors['repeat_password']) }}
-    </div>
+    <label for="password">Password</label>
+    <input 
+        type="password"
+        id="password"
+        name="password"
+        {% if fields.password.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-password"
+        {% endif %}
+        value="{{ fields.password.value|default('') }}"
+    />
 
-    <button type="submit">Register</button>
+    {% if fields.password.error %}
+        <small id="invalid-helper-password">
+            {{ fields.password.error }}
+        </small>
+    {% endif %}
+
+    <label for="repeat_password">Password</label>
+    <input 
+        type="password"
+        id="repeat_password"
+        name="repeat_password"
+        {% if fields.repeat_password.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-repeat_password"
+        {% endif %}
+        value="{{ fields.repeat_password.value|default('') }}"
+    />
+
+    {% if fields.repeat_password.error %}
+        <small id="invalid-helper-repeat_password">
+            {{ fields.repeat_password.error }}
+        </small>
+    {% endif %}
+
+    <button type="submit">
+        Create account
+    </button>
+
+    <section class="htmx-indicator">
+        <div aria-busy="true"></div>
+    </section>
 </form>

@@ -5,9 +5,20 @@
 {% endblock %}
 
 {% block content %}
-    <div>
-        <h2>Register form</h2>
-        {% include 'auth/register/form.html.twig' %}
-        <a href="{{ link('auth.login') }}">Already has account? Login</a>
-    </div>
+    <article>
+        <header>
+            <h1>Register form</h1>
+        </header>
+
+        <section>
+            {% include 'auth/register/form.html.twig' %}
+        </section>
+
+        <footer>
+            <p>
+                Already has account?
+                <a href="{{ link('auth.login') }}">Login</a>.
+            </p>
+        </footer>
+    </article>
 {% endblock %}
