@@ -7,25 +7,25 @@
 }
 
 /* Info */
-.alert.info {
+.alert.alert-info {
   background-color: var(--pico-primary-background);
   color: var(--pico-primary-inverse);
 }
 
 /* Success */
-.alert.success {
+.alert.alert-success {
   background-color: var(--pico-form-element-valid-active-border-color);
   color: var(--pico-primary-inverse);
 }
 
 /* Warning */
-.alert.warning {
+.alert.alert-warning {
   background-color: var(--pico-mark-background-color);
   color: var(--pico-mark-color);
 }
 
 /* Error */
-.alert.error {
+.alert.alert-error {
   background-color: var(--pico-form-element-invalid-active-border-color);
   color: var(--pico-primary-inverse);
 }

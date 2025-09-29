@@ -41,7 +41,7 @@ final class RegisterAction extends AbstractAction
         }
 
         if ($this->userRepository->getUserByEmail($body['email'])) {
-            //TODO: add flash message "This email is already used."
+            $this->formValidator->setFieldError('email', "This email is already used.");
             return $this->getInvalidForm();
         }
 
@@ -63,7 +63,7 @@ final class RegisterAction extends AbstractAction
     private function getInvalidForm(): ResponseInterface
     {
         return $this->render("auth/register/form.html.twig", [
-            "fields" => $this->formValidator->getFields()
+            "form" => $this->formValidator->getForm()
         ], StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY);
     }
 }

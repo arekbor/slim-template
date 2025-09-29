@@ -14,6 +14,11 @@ final class FormValidator
     private array $fields = [];
 
     /**
+     * @var string[] List of form-level errors not associated with any specific field.
+     */
+    private array $formErrors = [];
+
+    /**
      * Adds a form field with validation rules.
      * 
      * @param string $fieldName Field name.
@@ -29,7 +34,7 @@ final class FormValidator
     {
         // Check if the field has already been defined.
         if (array_key_exists($fieldName, $this->fields)) {
-            throw new \InvalidArgumentException("$fieldName is already defined in fields.");
+            throw new \InvalidArgumentException("The field \"$fieldName\" is already defined in fields.");
         }
 
         foreach ($asserts as $assert) {
@@ -63,7 +68,7 @@ final class FormValidator
 
         foreach (array_keys($this->fields) as $fieldName) {
             if (!array_key_exists($fieldName, $body)) {
-                throw new \InvalidArgumentException("$fieldName not exists in body.");
+                throw new \InvalidArgumentException("The field \"$fieldName\" not exists in body.");
             }
 
             $value = $body[$fieldName] ?? '';
@@ -85,17 +90,59 @@ final class FormValidator
     }
 
     /**
-     * Returns all fields with their values and validation errors.
+     * Sets an error message for the given form field.
      * 
-     * @return array<string, array{value:mixed, error:?string}>
+     * @param string $fieldName Field name
+     * @param string $message Error message
+     * 
+     * @throws \InvalidArgumentException If the given field does not exist in the fields collection.
+     * 
+     * @return static
      */
-    public function getFields(): array
+    public function setFieldError(string $fieldName, string $message): static
     {
-        return array_map(function ($field) {
+        if (!array_key_exists($fieldName, $this->fields)) {
+            throw new \InvalidArgumentException("The field \"$fieldName\" does not exist in fields.");
+        }
+
+        $this->fields[$fieldName]['error'] = $message;
+
+        return $this;
+    }
+
+    /**
+     * Adds a general form-level error.
+     * 
+     * @param string $message error message.
+     * @return static
+     */
+    public function addFormError(string $message): static
+    {
+        $this->formErrors[] = $message;
+
+        return $this;
+    }
+
+    /**
+     * Returns form result that contains all validated fields and form level errors.
+     * 
+     * @return array{
+     *  fields: array<string, array{value: mixed, error: string|null}>,
+     *  formErrors: string[]
+     * }
+     */
+    public function getForm(): array
+    {
+        $fields = array_map(function ($field) {
             return [
                 'value' => $field['value'],
                 'error' => $field['error'],
             ];
         }, $this->fields);
+
+        return [
+            'fields' => $fields,
+            'formErrors' => $this->formErrors
+        ];
     }
 }

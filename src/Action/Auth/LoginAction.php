@@ -38,7 +38,7 @@ final class LoginAction extends AbstractAction
 
         $user = $this->userRepository->getUserByEmail($body['email']);
         if (!$user || !password_verify($body['password'], $user['password'])) {
-            //TODO: add flash message "Invalid email or password."
+            $this->formValidator->addFormError("Invalid email or password.");
             return $this->getInvalidForm();
         }
 
@@ -55,7 +55,7 @@ final class LoginAction extends AbstractAction
     private function getInvalidForm(): ResponseInterface
     {
         return $this->render("auth/login/form.html.twig", [
-            "fields" => $this->formValidator->getFields()
+            "form" => $this->formValidator->getForm()
         ], StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY);
     }
 }

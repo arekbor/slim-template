@@ -7,16 +7,16 @@
         type="text"
         id="username"
         name="username"
-        {% if fields.username.error %}
+        {% if form.fields.username.error %}
             aria-invalid="true"
             aria-describedby="invalid-helper-username"
         {% endif %}
-        value="{{ fields.username.value|default('') }}"
+        value="{{ form.fields.username.value|default('') }}"
     />
 
-    {% if fields.username.error %}
+    {% if form.fields.username.error %}
         <small id="invalid-helper-username">
-            {{ fields.username.error }}
+            {{ form.fields.username.error }}
         </small>
     {% endif %}
 
@@ -25,16 +25,16 @@
         type="email"
         id="email"
         name="email"
-        {% if fields.email.error %}
+        {% if form.fields.email.error %}
             aria-invalid="true"
             aria-describedby="invalid-helper-email"
         {% endif %}
-        value="{{ fields.email.value|default('') }}"
+        value="{{ form.fields.email.value|default('') }}"
     />
 
-    {% if fields.email.error %}
+    {% if form.fields.email.error %}
         <small id="invalid-helper-email">
-            {{ fields.email.error }}
+            {{ form.fields.email.error }}
         </small>
     {% endif %}
 
@@ -43,16 +43,16 @@
         type="password"
         id="password"
         name="password"
-        {% if fields.password.error %}
+        {% if form.fields.password.error %}
             aria-invalid="true"
             aria-describedby="invalid-helper-password"
         {% endif %}
-        value="{{ fields.password.value|default('') }}"
+        value="{{ form.fields.password.value|default('') }}"
     />
 
-    {% if fields.password.error %}
+    {% if form.fields.password.error %}
         <small id="invalid-helper-password">
-            {{ fields.password.error }}
+            {{ form.fields.password.error }}
         </small>
     {% endif %}
 
@@ -61,16 +61,16 @@
         type="password"
         id="repeat_password"
         name="repeat_password"
-        {% if fields.repeat_password.error %}
+        {% if form.fields.repeat_password.error %}
             aria-invalid="true"
             aria-describedby="invalid-helper-repeat_password"
         {% endif %}
-        value="{{ fields.repeat_password.value|default('') }}"
+        value="{{ form.fields.repeat_password.value|default('') }}"
     />
 
-    {% if fields.repeat_password.error %}
+    {% if form.fields.repeat_password.error %}
         <small id="invalid-helper-repeat_password">
-            {{ fields.repeat_password.error }}
+            {{ form.fields.repeat_password.error }}
         </small>
     {% endif %}
 

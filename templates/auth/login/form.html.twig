@@ -2,21 +2,25 @@
     hx-post="{{ link('auth.login') }}"
     hx-disabled-elt="button[type='submit']"
 >
+    {% for error in form.formErrors %}
+        <div class="alert alert-error">{{ error }}</div>
+    {% endfor %}
+
     <label for="email">E-mail</label>
     <input 
         type="email"
         id="email"
         name="email"
-        {% if fields.email.error %}
+        {% if form.fields.email.error %}
             aria-invalid="true"
             aria-describedby="invalid-helper-email"
         {% endif %}
-        value="{{ fields.email.value|default('') }}"
+        value="{{ form.fields.email.value|default('') }}"
     />
 
-    {% if fields.email.error %}
+    {% if form.fields.email.error %}
         <small id="invalid-helper-email">
-            {{ fields.email.error }}
+            {{ form.fields.email.error }}
         </small>
     {% endif %}
 
@@ -25,16 +29,16 @@
         type="password"
         id="password"
         name="password"
-        {% if fields.password.error %}
+        {% if form.fields.password.error %}
             aria-invalid="true"
             aria-describedby="invalid-helper-password"
         {% endif %}
-        value="{{ fields.password.value|default('') }}"
+        value="{{ form.fields.password.value|default('') }}"
     />
 
-    {% if fields.password.error %}
+    {% if form.fields.password.error %}
         <small id="invalid-helper-password">
-            {{ fields.password.error }}
+            {{ form.fields.password.error }}
         </small>
     {% endif %}
 
