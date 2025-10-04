@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {% if contactId %}
+        Edit contact
+    {% else %}
+        Add a contact
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <article>
+        <header>
+            <h1>
+            {% if contactId %}
+                Edit contact
+            {% else %}
+                Add a contact
+            {% endif %}
+            </h1>
+        </header>
+
+        <section>
+            {% include 'contact/form.html.twig' with { form: form } %}
+        </section>
+    </article>
+{% endblock %}

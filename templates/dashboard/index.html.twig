@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block content %}
+    <section>
+        You're logged as <strong>{{ session.user.username }}</strong>
+    </section>
+
+    <section>
+        <a href="{{ link('contact') }}">Add contact</a>
+    </section>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Email</th>
+            <th>Creator</th>
+            <th>Action</th>
+        </tr>
+        {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.id|default('') }}</td>
+                <td>{{ contact.firstname|default('') }}</td>
+                <td>{{ contact.lastname|default('') }}</td>
+                <td>{{ contact.email|default('') }}</td>
+                <td>{{ contact.creator|default('') }}</td>
+                <td>
+                    <a href="{{ link('contact', { id: contact.id }) }}">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

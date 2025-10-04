@@ -20,5 +20,19 @@ final class Migrations extends AbstractDatabase
         ";
 
         $this->sql($sql);
+
+        $sql = "
+            CREATE TABLE IF NOT EXISTS contacts (
+                id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+                firstname VARCHAR(50) NULL,
+                lastname VARCHAR(50) NULL,
+                email VARCHAR(100) NULL,
+                userId INT UNSIGNED,
+                
+                FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+            )
+        ";
+
+        $this->sql($sql);
     }
 }

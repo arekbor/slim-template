@@ -56,9 +56,11 @@ abstract class AbstractDatabase
         return $this->pDOStatement->fetchAll();
     }
 
-    protected function fetchOne(): mixed
+    protected function fetchOne(): ?array
     {
-        return $this->pDOStatement->fetch();
+        $result = $this->pDOStatement->fetch();
+
+        return is_array($result) ? $result : null;
     }
 
     private function initConnection(): void

@@ -30,26 +30,28 @@ final class RegisterAction extends AbstractAction
         $body = $this->request->getParsedBody();
 
         $this->formValidator
-            ->addField('username', [new NotEmptyAssert()])
-            ->addField('email', [new NotEmptyAssert(), new EmailAssert()])
-            ->addField('password', [new NotEmptyAssert()])
-            ->addField('repeat_password', [new NotEmptyAssert(), new PasswordMatchAssert($body['password'])])
+            ->addField(fieldName: 'username', asserts: [new NotEmptyAssert()])
+            ->addField(fieldName: 'email', asserts: [new NotEmptyAssert(), new EmailAssert()])
+            ->addField(fieldName: 'password', asserts: [new NotEmptyAssert()])
+            ->addField(fieldName: 'repeat_password', asserts: [new NotEmptyAssert(), new PasswordMatchAssert($body['password'])])
         ;
 
         if (!$this->formValidator->valid($body)) {
             return $this->getInvalidForm();
         }
 
-        if ($this->userRepository->getUserByEmail($body['email'])) {
+        $user = $this->formValidator->getFormValues();
+
+        if ($this->userRepository->getUserByEmail($user['email'])) {
             $this->formValidator->setFieldError('email', "This email is already used.");
             return $this->getInvalidForm();
         }
 
-        $hashedPassword = password_hash($body['password'], PASSWORD_BCRYPT);
+        $hashedPassword = password_hash($user['password'], PASSWORD_BCRYPT);
 
         $isUserCreated = $this->userRepository->createUser([
-            'username' => $body['username'],
-            'email' => $body['email'],
+            'username' => $user['username'],
+            'email' => $user['email'],
             'password' => $hashedPassword
         ]);
 

@@ -9,7 +9,6 @@ use DI\Attribute\Inject;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Interfaces\RouteParserInterface;
-use Slim\Psr7\Headers;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
@@ -18,7 +17,7 @@ abstract class AbstractAction
     protected Request $request;
     protected ResponseInterface $response;
 
-    protected array $args;
+    private array $args;
 
     private Twig $twig;
     private RouteParserInterface $routeParser;
@@ -45,6 +44,11 @@ abstract class AbstractAction
     public function setRouteParser(RouteParserInterface $routeParser): void
     {
         $this->routeParser = $routeParser;
+    }
+
+    public function getArg(string $key): mixed
+    {
+        return isset($this->args[$key]) ? $this->args[$key] : null;
     }
 
     protected function render(

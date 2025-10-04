@@ -30,7 +30,7 @@ final class FormValidator
      *  does not implement AssertInterface.
      * 
      */
-    public function addField(string $fieldName, array $asserts = []): static
+    public function addField(string $fieldName, mixed $value = null, array $asserts = []): static
     {
         // Check if the field has already been defined.
         if (array_key_exists($fieldName, $this->fields)) {
@@ -48,7 +48,7 @@ final class FormValidator
 
         $this->fields[$fieldName] = [
             'asserts' => $asserts,
-            'value' => null,
+            'value' => $value,
             'error' => null
         ];
 
@@ -71,14 +71,15 @@ final class FormValidator
                 throw new \InvalidArgumentException("The field \"$fieldName\" not exists in body.");
             }
 
-            $value = $body[$fieldName] ?? '';
+            $value = !empty($body[$fieldName]) ? $body[$fieldName] : null;
             $this->fields[$fieldName]['value'] = $value;
 
             /**
              * @var AssertInterface $fieldAssert
              */
+
             foreach ($this->fields[$fieldName]['asserts'] as $fieldAssert) {
-                if (!$fieldAssert->validate($this->fields[$fieldName]['value'])) {
+                if (!$fieldAssert->validate($body[$fieldName])) {
                     $this->fields[$fieldName]['error'] = $fieldAssert->errorMessage();
                     $isValid = false;
                     break;
@@ -123,6 +124,13 @@ final class FormValidator
         return $this;
     }
 
+    public function getFormValues(): array
+    {
+        return array_map(function (array $field): mixed {
+            return $field['value'];
+        }, $this->fields);
+    }
+
     /**
      * Returns form result that contains all validated fields and form level errors.
      * 
@@ -133,7 +141,7 @@ final class FormValidator
      */
     public function getForm(): array
     {
-        $fields = array_map(function ($field) {
+        $fields = array_map(function (array $field): array {
             return [
                 'value' => $field['value'],
                 'error' => $field['error'],

@@ -38,7 +38,6 @@ $container->set(RouteParserInterface::class, fn() => $app->getRouteCollector()->
 $serverRequestCreator = ServerRequestCreatorFactory::create();
 $request = $serverRequestCreator->createServerRequestFromGlobals();
 
-//TODO: make some command or something
 $migrations = new Migrations();
 $migrations->createTables();
 

@@ -27,8 +27,8 @@ final class LoginAction extends AbstractAction
         }
 
         $this->formValidator
-            ->addField('email', [new NotEmptyAssert(), new EmailAssert()])
-            ->addField('password', [new NotEmptyAssert()]);
+            ->addField(fieldName: 'email', asserts: [new NotEmptyAssert(), new EmailAssert()])
+            ->addField(fieldName: 'password', asserts: [new NotEmptyAssert()]);
 
         $body = $this->request->getParsedBody();
 
@@ -36,8 +36,10 @@ final class LoginAction extends AbstractAction
             return $this->getInvalidForm();
         }
 
-        $user = $this->userRepository->getUserByEmail($body['email']);
-        if (!$user || !password_verify($body['password'], $user['password'])) {
+        $userForm = $this->formValidator->getFormValues();
+
+        $user = $this->userRepository->getUserByEmail($userForm['email']);
+        if (!$user || !password_verify($userForm['password'], $user['password'])) {
             $this->formValidator->addFormError("Invalid email or password.");
             return $this->getInvalidForm();
         }
@@ -49,7 +51,7 @@ final class LoginAction extends AbstractAction
             'logged_at' => time()
         ];
 
-        return $this->hxRedirect("home");
+        return $this->hxRedirect("dashboard");
     }
 
     private function getInvalidForm(): ResponseInterface

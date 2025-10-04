@@ -1,0 +1,76 @@
+<form
+    hx-post="{{ link('contact') }}"
+    hx-disabled-elt="button[type='submit']"
+>
+    {% for error in form.formErrors %}
+        <div class="alert alert-error">{{ error }}</div>
+    {% endfor %}
+
+    <input 
+        type="text" 
+        name="id"
+        hidden value="{{ form.fields.id.value|default('') }}" 
+    />
+
+    <label for="firstname">Firstname</label>
+    <input 
+        type="text" 
+        id="firstname"
+        name="firstname"
+        {% if form.fields.firstname.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-firstname"
+        {% endif %}
+        value="{{ form.fields.firstname.value|default('') }}"
+    />
+
+    {% if form.fields.firstname.error %}
+        <small id="invalid-helper-firstname">
+            {{ form.fields.firstname.error }}
+        </small>
+    {% endif %}
+
+    <label for="lastname">Lastname</label>
+    <input 
+        type="text" 
+        id="lastname"
+        name="lastname"
+        {% if form.fields.lastname.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-lastname"
+        {% endif %}
+        value="{{ form.fields.lastname.value|default('') }}"
+    />
+
+    {% if form.fields.lastname.error %}
+        <small id="invalid-helper-lastname">
+            {{ form.fields.lastname.error }}
+        </small>
+    {% endif %}
+
+    <label for="lastname">E-mail</label>
+    <input 
+        type="email" 
+        id="email"
+        name="email"
+        {% if form.fields.email.error %}
+            aria-invalid="true"
+            aria-describedby="invalid-helper-email"
+        {% endif %}
+        value="{{ form.fields.email.value|default('') }}"
+    />
+
+    {% if form.fields.email.error %}
+        <small id="invalid-helper-email">
+            {{ form.fields.email.error }}
+        </small>
+    {% endif %}
+
+    <button type="submit">
+        Save
+    </button>
+
+    <section class="htmx-indicator">
+        <div aria-busy="true"></div>
+    </section>
+</form>
